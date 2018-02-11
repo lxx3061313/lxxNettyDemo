@@ -12,6 +12,14 @@
     <artifactId>nettydemo.provider</artifactId>
     <packaging>war</packaging>
 
+    <dependencies>
+    <dependency>
+        <groupId>com.lxx.mydemo</groupId>
+        <artifactId>nettydemo.service</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+   </dependencies>
+
     <build>
         <finalName>nettydemo.provider</finalName>
         <plugins>

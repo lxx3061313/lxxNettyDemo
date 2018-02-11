@@ -8,7 +8,7 @@
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
-    <context:component-scan base-package="com.ysgh.pro.service.common.web.spring"/>
-    <context:component-scan base-package="com.ysgh.pro">
+    <context:component-scan base-package="com.lxx.mydemo.nettydemo.service.common.web"/>
+    <context:component-scan base-package="com.lxx.mydemo.nettydemo">
     </context:component-scan>
 </beans>
