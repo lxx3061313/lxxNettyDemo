@@ -8,16 +8,4 @@
     <!--<bean id="accessLogFilter" class="com.ysgh.pro.service.common.web.filter.AccessDataLogFilter">-->
         <!--<property name="loggerName" value="accessDataLog"/>-->
     <!--</bean>-->
-
-    <!--<bean id="authFilter" class="com.benmu.mts.batman.authority.api.AuthFilter">-->
-        <!--<property name="excludeUris">-->
-            <!--<list>-->
-                <!--<value>/batman/auth/checkUser</value>-->
-                <!--<value>/batman/auth/getKey</value>-->
-                <!--<value>/batman/auth/login</value>-->
-                <!--<value>/batman/auth/logout</value>-->
-            <!--</list>-->
-        <!--</property>-->
-    <!--</bean>-->
-
 </beans>

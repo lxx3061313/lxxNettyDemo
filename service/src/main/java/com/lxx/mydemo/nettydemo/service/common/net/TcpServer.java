@@ -5,6 +5,8 @@ import io.netty.channel.ChannelFuture;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TcpServer {
+    private final static Logger logger = LoggerFactory.getLogger(TcpServer.class);
 
     @Resource
     private ServerBootstrap serverBootstrap;
@@ -27,5 +30,10 @@ public class TcpServer {
     @PreDestroy
     public void stop() throws InterruptedException {
         future.channel().closeFuture().sync();
+    }
+
+    @PostConstruct
+    private void init(){
+        logger.info("load tcp server");
     }
 }

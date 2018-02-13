@@ -1,7 +1,9 @@
 package com.lxx.mydemo.nettydemo.service.common.net;
 
+import com.lxx.mydemo.nettydemo.service.bean.MsgConstants;
 import com.lxx.mydemo.nettydemo.service.common.util.ByteUtil;
 import com.lxx.mydemo.nettydemo.service.common.util.DateFormatUtil;
+import com.lxx.mydemo.nettydemo.service.p808.P808Decoder;
 import com.sun.org.apache.regexp.internal.RE;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
@@ -14,10 +16,14 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Resource;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,8 +44,6 @@ public class NettySpringConfig {
     @Value("${worker.thread.count}")
     private int workerCount;
 
-    private int count;
-
     @Bean(name = "serverBootstrap")
     public ServerBootstrap bootstrap() {
         ServerBootstrap bootstrap = new ServerBootstrap();
@@ -49,16 +53,18 @@ public class NettySpringConfig {
 
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
-                            @Override
-                            public void channelRead(ChannelHandlerContext ctx, Object msg)
-                                    throws Exception {
-                                ByteBuf buf = (ByteBuf) msg;
-                                byte[] bytes = new byte[buf.readableBytes()];
-                                buf.readBytes(bytes);
-                                logger.info("receive bytes:{}", ByteUtil.bytes2HexString(bytes));
-                            }
-                        });
+                        // 空闲检测
+                        ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(15, 0, 0,
+                                TimeUnit.MINUTES));
+
+                        // 半包/粘包分解器
+                        ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, Unpooled.copiedBuffer(new byte[] {
+                                MsgConstants.MSG_IDENTIFICATION_BIT }),
+                                Unpooled.copiedBuffer(new byte[] { MsgConstants.MSG_IDENTIFICATION_BIT,
+                                        MsgConstants.MSG_IDENTIFICATION_BIT })));
+
+                        // 808协议解码器
+                        ch.pipeline().addLast(p808MsgHandler());
                     }
                 }).option(ChannelOption.SO_BACKLOG, 1024);
         return bootstrap;
@@ -72,5 +78,10 @@ public class NettySpringConfig {
     @Bean(name= "workerGroup")
     public NioEventLoopGroup workerGroup() {
         return new NioEventLoopGroup(workerCount);
+    }
+
+    @Bean(name= "p808MsgHandler")
+    public P808MsgHandler p808MsgHandler() {
+        return new P808MsgHandler();
     }
 }
