@@ -64,7 +64,7 @@ public class NettySpringConfig {
                                         MsgConstants.MSG_IDENTIFICATION_BIT })));
 
                         // 808协议解码器
-                        ch.pipeline().addLast(p808MsgHandler());
+                        ch.pipeline().addLast(p808MsgDecoder());
                     }
                 }).option(ChannelOption.SO_BACKLOG, 1024);
         return bootstrap;
@@ -80,8 +80,8 @@ public class NettySpringConfig {
         return new NioEventLoopGroup(workerCount);
     }
 
-    @Bean(name= "p808MsgHandler")
-    public P808MsgHandler p808MsgHandler() {
-        return new P808MsgHandler();
+    @Bean(name= "p808Decoder")
+    public P808Decoder p808MsgDecoder() {
+        return new P808Decoder();
     }
 }

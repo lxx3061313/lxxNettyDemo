@@ -3,6 +3,7 @@ package com.lxx.mydemo.nettydemo.service.p808;
 import com.lxx.mydemo.nettydemo.service.bean.MsgConstants;
 import com.lxx.mydemo.nettydemo.service.bean.P808Msg;
 import com.lxx.mydemo.nettydemo.service.bean.P808Msg.P808MsgHeader;
+import com.lxx.mydemo.nettydemo.service.common.util.BCD8421Operater;
 import com.lxx.mydemo.nettydemo.service.common.util.BitOperator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -19,6 +20,9 @@ public class P808Encoder extends MessageToMessageEncoder<P808Msg>{
 
     @Resource
     BitOperator bitOperator;
+
+    @Resource
+    BCD8421Operater bcd8421Operater;
     @Override
     protected void encode(ChannelHandlerContext ctx, P808Msg msg, List<Object> out)
             throws Exception {
@@ -34,5 +38,31 @@ public class P808Encoder extends MessageToMessageEncoder<P808Msg>{
         //2. 消息体属性
         buf.writeBytes(bitOperator.integerTo2Bytes(header.getMsgBodyPropsField()));
 
+        //3. 设备id
+        buf.writeBytes(bcd8421Operater.parseBytesFromString(header.getTerminalPhone()));
+
+        //4. 消息流水号
+        buf.writeBytes(bitOperator.integerTo2Bytes(header.getFlowId()));
+
+        //5. 消息封装项
+        if (header.isHasSubPackage()) {
+            buf.writeBytes(bitOperator.integerTo2Bytes((int)header.getTotalSubPackage()));
+            buf.writeBytes(bitOperator.integerTo2Bytes((int)header.getSubPackageSeq()));
+        }
+
+
+        //6. 消息体
+        buf.writeBytes(msg.getMsgBodyBytes());
+
+        //7. 校验码
+        byte [] forCheckSum = new byte[buf.readableBytes()];
+        buf.readBytes(forCheckSum);
+        buf.writeByte(bitOperator.getCheckSum4JT808(forCheckSum, 1, forCheckSum.length - 1));
+
+        //8. 标识位
+        buf.writeByte(MsgConstants.MSG_IDENTIFICATION_BIT);
+        buf.resetReaderIndex();
+
+        //out.add(buf);
     }
 }

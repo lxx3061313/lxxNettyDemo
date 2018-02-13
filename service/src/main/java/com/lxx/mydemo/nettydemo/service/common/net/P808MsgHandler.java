@@ -18,29 +18,6 @@ import org.springframework.stereotype.Service;
  * @version 2018-02-13
  */
 @Sharable
-public class P808MsgHandler extends ChannelInboundHandlerAdapter {
-    private final static Logger logger = LoggerFactory.getLogger(P808MsgHandler.class);
+public class P808MsgHandler {
 
-    @Resource
-    P808Decoder p808Decoder;
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf buf = (ByteBuf) msg;
-        if (buf.readableBytes() == 0) {
-            return;
-        }
-
-        byte[] bytes = new byte[buf.readableBytes()];
-        buf.readBytes(bytes);
-        logger.info("receive bytes:{}", ByteUtil.bytes2HexString(bytes));
-
-        P808Msg p808Msg = p808Decoder.parseMsg(bytes);
-        logger.info("parse msg:{}", JsonUtil.of(p808Msg));
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
-    }
 }

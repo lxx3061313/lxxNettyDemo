@@ -7,16 +7,26 @@ import java.nio.channels.Channel;
  * @version 2018-02-12
  */
 public class P808Msg {
-    protected P808MsgHeader msgHeader;
-    // 消息体字节数组
-    protected byte[] msgBodyBytes;
-    /**
-     * 校验码 1byte
-     */
-    protected int checkSum;
 
-    //记录每个客户端的channel,以便下发信息给客户端
-    protected Channel channel;
+    /**
+     * 消息头
+     */
+    private P808MsgHeader msgHeader;
+
+    /**
+     * 消息体字节数组
+     */
+    private byte[] msgBodyBytes;
+
+    /**
+     * 校验码(1byte)
+     */
+    private int checkSum;
+
+    /**
+     * 记录每个客户端的channel,以便下发信息给客户端
+     */
+    private Channel channel;
 
 
     public P808MsgHeader getMsgHeader() {
@@ -70,6 +80,7 @@ public class P808Msg {
 
         // 终端手机号
         protected String terminalPhone;
+
         // 流水号
         protected int flowId;
 

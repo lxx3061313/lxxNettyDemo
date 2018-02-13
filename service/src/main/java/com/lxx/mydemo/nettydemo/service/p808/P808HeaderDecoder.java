@@ -3,6 +3,8 @@ package com.lxx.mydemo.nettydemo.service.p808;
 import com.lxx.mydemo.nettydemo.service.bean.P808Msg.P808MsgHeader;
 import com.lxx.mydemo.nettydemo.service.common.util.BCD8421Operater;
 import com.lxx.mydemo.nettydemo.service.common.util.BitOperator;
+import com.lxx.mydemo.nettydemo.service.common.util.TransUtil;
+import java.util.Arrays;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +45,7 @@ public class P808HeaderDecoder {
         header.setReservedBit(((msgBodyProps & 0xc000) >> 14) + "");
 
         //3. 终端手机号
-        header.setTerminalPhone(bcd8421Operater.parseBcdStringFromBytes(headerBytes, 4, 6, null));
+        header.setTerminalPhone(bcd8421Operater.parseBcdHexString(headerBytes, 4, 6));
 
         //4. 消息流水号
         header.setFlowId(bitOperator.parseIntFromBytes(headerBytes, 10 ,2));

@@ -118,7 +118,7 @@ public class TransUtil {
         return b & 0xFF;
     }
 
-    private static byte charToByte(char c) {
+    public static byte charToByte(char c) {
         return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
