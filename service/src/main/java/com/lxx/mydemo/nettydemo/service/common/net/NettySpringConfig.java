@@ -3,6 +3,7 @@ package com.lxx.mydemo.nettydemo.service.common.net;
 import com.lxx.mydemo.nettydemo.service.bean.MsgConstants;
 import com.lxx.mydemo.nettydemo.service.p808.P808Decoder;
 import com.lxx.mydemo.nettydemo.service.p808.P808Encoder;
+import com.lxx.mydemo.nettydemo.service.p808.TerminalAuthHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalRegHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -56,9 +57,14 @@ public class NettySpringConfig {
                         // 808协议解码器
                         ch.pipeline().addLast(p808MsgDecoder());
 
+                        // 808协议编码器
                         ch.pipeline().addLast(p808Encoder());
 
+                        // 终端注册处理器
                         ch.pipeline().addLast(terminalRegHandler());
+
+                        // 终端鉴权处理器
+                        ch.pipeline().addLast(terminalAuthHandler());
                     }
                 }).option(ChannelOption.SO_BACKLOG, 1024);
         return bootstrap;
@@ -69,19 +75,24 @@ public class NettySpringConfig {
         return new NioEventLoopGroup(bossCount);
     }
 
-    @Bean(name= "workerGroup")
+    @Bean(name = "workerGroup")
     public NioEventLoopGroup workerGroup() {
         return new NioEventLoopGroup(workerCount);
     }
 
-    @Bean(name= "p808Decoder")
+    @Bean(name = "p808Decoder")
     public P808Decoder p808MsgDecoder() {
         return new P808Decoder();
     }
 
-    @Bean(name= "terminalRegHandler")
+    @Bean(name = "terminalRegHandler")
     public TerminalRegHandler terminalRegHandler() {
         return new TerminalRegHandler();
+    }
+
+    @Bean(name = "terminalAuthHandler")
+    public TerminalAuthHandler terminalAuthHandler() {
+        return new TerminalAuthHandler();
     }
 
     @Bean(name = "p808Encoder")

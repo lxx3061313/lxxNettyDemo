@@ -40,21 +40,21 @@ public class P808Encoder extends MessageToMessageEncoder<P808Msg>{
         P808MsgHeader header = msg.getMsgHeader();
 
         //1. 消息id
-        buf.writeBytes(bitOperator.integerTo2Bytes(header.getMsgId()));
+        buf.writeBytes(BitOperator.integerTo2Bytes(header.getMsgId()));
 
         //2. 消息体属性
-        buf.writeBytes(bitOperator.integerTo2Bytes(header.getMsgBodyPropsField()));
+        buf.writeBytes(BitOperator.integerTo2Bytes(header.getMsgBodyPropsField()));
 
         //3. 设备id
         buf.writeBytes(bcd8421Operater.parseBytesFromString(header.getTerminalPhone()));
 
         //4. 消息流水号
-        buf.writeBytes(bitOperator.integerTo2Bytes(header.getFlowId()));
+        buf.writeBytes(BitOperator.integerTo2Bytes(header.getFlowId()));
 
         //5. 消息封装项
         if (header.isHasSubPackage()) {
-            buf.writeBytes(bitOperator.integerTo2Bytes((int)header.getTotalSubPackage()));
-            buf.writeBytes(bitOperator.integerTo2Bytes((int)header.getSubPackageSeq()));
+            buf.writeBytes(BitOperator.integerTo2Bytes((int)header.getTotalSubPackage()));
+            buf.writeBytes(BitOperator.integerTo2Bytes((int)header.getSubPackageSeq()));
         }
 
 
@@ -64,7 +64,7 @@ public class P808Encoder extends MessageToMessageEncoder<P808Msg>{
         //7. 校验码
         byte [] forCheckSum = new byte[buf.readableBytes()];
         buf.readBytes(forCheckSum);
-        buf.writeByte(bitOperator.getCheckSum4JT808(forCheckSum, 1, forCheckSum.length - 1));
+        buf.writeByte(BitOperator.getCheckSum4JT808(forCheckSum, 1, forCheckSum.length - 1));
 
         //8. 标识位
         buf.writeByte(MsgConstants.MSG_IDENTIFICATION_BIT);

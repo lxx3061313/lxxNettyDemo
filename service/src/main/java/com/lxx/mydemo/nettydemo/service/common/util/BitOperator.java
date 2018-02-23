@@ -17,7 +17,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public byte integerTo1Byte(int value) {
+    public static byte integerTo1Byte(int value) {
         return (byte) (value & 0xFF);
     }
 
@@ -28,7 +28,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public byte[] integerTo1Bytes(int value) {
+    public static byte[] integerTo1Bytes(int value) {
         byte[] result = new byte[1];
         result[0] = (byte) (value & 0xFF);
         return result;
@@ -41,7 +41,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public byte[] integerTo2Bytes(int value) {
+    public static byte[] integerTo2Bytes(int value) {
         byte[] result = new byte[2];
         result[0] = (byte) ((value >>> 8) & 0xFF);
         result[1] = (byte) (value & 0xFF);
@@ -55,7 +55,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public byte[] integerTo3Bytes(int value) {
+    public static byte[] integerTo3Bytes(int value) {
         byte[] result = new byte[3];
         result[0] = (byte) ((value >>> 16) & 0xFF);
         result[1] = (byte) ((value >>> 8) & 0xFF);
@@ -70,7 +70,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public byte[] integerTo4Bytes(int value){
+    public static byte[] integerTo4Bytes(int value){
         byte[] result = new byte[4];
         result[0] = (byte) ((value >>> 24) & 0xFF);
         result[1] = (byte) ((value >>> 16) & 0xFF);
@@ -86,7 +86,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public int byteToInteger(byte[] value) {
+    public static int byteToInteger(byte[] value) {
         int result;
         if (value.length == 1) {
             result = oneByteToInteger(value[0]);
@@ -102,7 +102,7 @@ public class BitOperator {
         return result;
     }
 
-    public int parseIntFromBytes(byte[] data, int startIndex, int length) {
+    public static int parseIntFromBytes(byte[] data, int startIndex, int length) {
         // 字节数大于4,从起始索引开始向后处理4个字节,其余超出部分丢弃
         final int len = length > 4 ? 4 : length;
         byte[] tmp = new byte[len];
@@ -117,7 +117,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public int oneByteToInteger(byte value) {
+    public static int oneByteToInteger(byte value) {
         return (int) value & 0xFF;
     }
 
@@ -128,7 +128,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public int twoBytesToInteger(byte[] value) {
+    public static int twoBytesToInteger(byte[] value) {
         // if (value.length < 2) {
         // throw new Exception("Byte array too short!");
         // }
@@ -144,7 +144,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public int threeBytesToInteger(byte[] value) {
+    public static int threeBytesToInteger(byte[] value) {
         int temp0 = value[0] & 0xFF;
         int temp1 = value[1] & 0xFF;
         int temp2 = value[2] & 0xFF;
@@ -158,7 +158,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public int fourBytesToInteger(byte[] value) {
+    public static int fourBytesToInteger(byte[] value) {
         // if (value.length < 4) {
         // throw new Exception("Byte array too short!");
         // }
@@ -176,7 +176,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public long fourBytesToLong(byte[] value) throws Exception {
+    public static long fourBytesToLong(byte[] value) throws Exception {
         // if (value.length < 4) {
         // throw new Exception("Byte array too short!");
         // }
@@ -194,7 +194,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public long bytes2Long(byte[] value) {
+    public static long bytes2Long(byte[] value) {
         long result = 0;
         int len = value.length;
         int temp;
@@ -216,7 +216,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public byte[] longToBytes(long value){
+    public static byte[] longToBytes(long value){
         return longToBytes(value, 8);
     }
 
@@ -227,7 +227,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public byte[] longToBytes(long value, int len) {
+    public static byte[] longToBytes(long value, int len) {
         byte[] result = new byte[len];
         int temp;
         for (int i = 0; i < len; i++) {
@@ -247,7 +247,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public byte[] generateTransactionID() throws Exception {
+    public static byte[] generateTransactionID() throws Exception {
         byte[] id = new byte[16];
         System.arraycopy(integerTo2Bytes((int) (Math.random() * 65536)), 0, id, 0, 2);
         System.arraycopy(integerTo2Bytes((int) (Math.random() * 65536)), 0, id, 2, 2);
@@ -267,7 +267,7 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public int[] getIntIPValue(String ip) throws Exception {
+    public static int[] getIntIPValue(String ip) throws Exception {
         String[] sip = ip.split("[.]");
         // if (sip.length != 4) {
         // throw new Exception("error IPAddress");
@@ -285,11 +285,11 @@ public class BitOperator {
      * @return
      * @throws Exception
      */
-    public String getStringIPValue(byte[] address) throws Exception {
-        int first = this.oneByteToInteger(address[0]);
-        int second = this.oneByteToInteger(address[1]);
-        int third = this.oneByteToInteger(address[2]);
-        int fourth = this.oneByteToInteger(address[3]);
+    public static String getStringIPValue(byte[] address) throws Exception {
+        int first = oneByteToInteger(address[0]);
+        int second = oneByteToInteger(address[1]);
+        int third = oneByteToInteger(address[2]);
+        int fourth = oneByteToInteger(address[3]);
 
         return first + "." + second + "." + third + "." + fourth;
     }
@@ -301,7 +301,7 @@ public class BitOperator {
      * @param rest
      * @return
      */
-    public byte[] concatAll(byte[] first, byte[]... rest) {
+    public static byte[] concatAll(byte[] first, byte[]... rest) {
         int totalLength = first.length;
         for (byte[] array : rest) {
             if (array != null) {
@@ -325,7 +325,7 @@ public class BitOperator {
      * @param rest
      * @return
      */
-    public byte[] concatAll(List<byte[]> rest) {
+    public static byte[] concatAll(List<byte[]> rest) {
         int totalLength = 0;
         for (byte[] array : rest) {
             if (array != null) {
@@ -343,12 +343,12 @@ public class BitOperator {
         return result;
     }
 
-    public float byte2Float(byte[] bs) {
+    public static float byte2Float(byte[] bs) {
         return Float.intBitsToFloat(
                 (((bs[3] & 0xFF) << 24) + ((bs[2] & 0xFF) << 16) + ((bs[1] & 0xFF) << 8) + (bs[0] & 0xFF)));
     }
 
-    public float byteBE2Float(byte[] bytes) {
+    public static float byteBE2Float(byte[] bytes) {
         int l;
         l = bytes[0];
         l &= 0xff;
@@ -360,7 +360,7 @@ public class BitOperator {
         return Float.intBitsToFloat(l);
     }
 
-    public int getCheckSum4JT808(byte[] bs, int start, int end) {
+    public static int getCheckSum4JT808(byte[] bs, int start, int end) {
         if (start < 0 || end > bs.length) {
             throw new ArrayIndexOutOfBoundsException("getCheckSum4JT808 error : index out of bounds(start=" + start
                     + ",end=" + end + ",bytes length=" + bs.length + ")");
@@ -372,7 +372,7 @@ public class BitOperator {
         return cs;
     }
 
-    public int getBitRange(int number, int start, int end) {
+    public static int getBitRange(int number, int start, int end) {
         if (start < 0) {
             throw new IndexOutOfBoundsException("min index is 0,but start = " + start);
         }
@@ -382,7 +382,7 @@ public class BitOperator {
         return (number << Integer.SIZE - (end + 1)) >>> Integer.SIZE - (end - start + 1);
     }
 
-    public int getBitAt(int number, int index) {
+    public static int getBitAt(int number, int index) {
         if (index < 0) {
             throw new IndexOutOfBoundsException("min index is 0,but " + index);
         }
@@ -394,13 +394,13 @@ public class BitOperator {
         return ((1 << index) & number) >> index;
     }
 
-    public int getBitAtS(int number, int index) {
+    public static int getBitAtS(int number, int index) {
         String s = Integer.toBinaryString(number);
         return Integer.parseInt(s.charAt(index) + "");
     }
 
     @Deprecated
-    public int getBitRangeS(int number, int start, int end) {
+    public static int getBitRangeS(int number, int start, int end) {
         String s = Integer.toBinaryString(number);
         StringBuilder sb = new StringBuilder(s);
         while (sb.length() < Integer.SIZE) {

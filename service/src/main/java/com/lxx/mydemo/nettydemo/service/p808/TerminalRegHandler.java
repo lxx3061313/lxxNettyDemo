@@ -3,11 +3,7 @@ package com.lxx.mydemo.nettydemo.service.p808;
 import com.lxx.mydemo.nettydemo.service.bean.P808Msg;
 import com.lxx.mydemo.nettydemo.service.bean.P808Msg.P808MsgHeader;
 import com.lxx.mydemo.nettydemo.service.bean.P808MsgType;
-import com.lxx.mydemo.nettydemo.service.bean.P808TerReqBodyResp;
-import com.lxx.mydemo.nettydemo.service.bean.P808TerReqBodyResp.Builder;
-import com.lxx.mydemo.nettydemo.service.bean.P808TerminalRegResp;
-import com.lxx.mydemo.nettydemo.service.bean.P808TerminalRegResp.TerRegRespBuilder;
-import com.lxx.mydemo.nettydemo.service.p808.P808HeaderBodyPropsBuilder.PropsBuilder;
+import com.lxx.mydemo.nettydemo.service.p808.msgbuilder.P808TerReqMsgBuilder;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -35,41 +31,25 @@ public class TerminalRegHandler extends ChannelInboundHandlerAdapter {
         if (msgHeader.getMsgId() == P808MsgType.TERMINAL_REG.getCode()) {
             logger.info("收到终端注册消息");
 
-            //相应终端注册应答
-            TerRegRespBuilder respBuilder = P808TerminalRegResp.createRespBuilder();
-            respBuilder.setMsgId(P808MsgType.TERMIMAL_REQ_RESP.getCode());
-
-            byte[] bytes = buildBody(msgHeader.getFlowId());
-            respBuilder.setBody(bytes);
-            respBuilder.setTerminalId(msgHeader.getTerminalPhone());
-            respBuilder.setFlowId(msgHeader.getFlowId() + 1);
-            respBuilder.setBodyField(buildBodyField(bytes.length));
+            // 相应终端注册应答
+            P808TerReqMsgBuilder respBuilder = P808TerReqMsgBuilder.createReqRespBuilder();
+            // body
+            respBuilder.setRespFlowId(msgHeader.getFlowId())
+                    .setRespResult((byte)0)
+                    .setAuthCode("123456");
+            // header
+            respBuilder.setMsgId(P808MsgType.TERMIMAL_REQ_RESP.getCode())
+                    .setTermimalId(msgHeader.getTerminalPhone())
+                    .setFlowId(msgHeader.getFlowId() + 1);
             P808Msg build = respBuilder.build();
             ctx.writeAndFlush(build);
-
         } else {
             ctx.fireChannelRead(msg);
         }
     }
 
-    private byte[] buildBody(int flowId) {
-        Builder builder = P808TerReqBodyResp.ReqBodyBuilder();
-        builder.setFlowId(flowId);
-        builder.setAuthCode("123456");
-        builder.setResult((byte)0);
-        return builder.build();
-    }
-
-    private int buildBodyField(int bodyLength) {
-        PropsBuilder builder = P808HeaderBodyPropsBuilder.createBuilder();
-        builder.setSubPackFlag(false);
-        builder.setencryType(0);
-        builder.setMsgBodyLength(bodyLength);
-        return builder.buildPropsField();
-    }
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
+        logger.error("接收终端注册消息异常", cause);
     }
 }
