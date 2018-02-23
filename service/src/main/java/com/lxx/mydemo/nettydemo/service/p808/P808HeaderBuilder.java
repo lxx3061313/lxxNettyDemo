@@ -103,7 +103,7 @@ public class P808HeaderBuilder {
         buf.writeBytes(bitOperator.integerTo2Bytes(this.msgId));
 
         //2. 消息体属性
-        buf.writeBytes(buildMsgBodyField());
+        buf.writeByte(buildMsgBodyField());
 
         //3. 终端手机号
         buf.writeBytes(this.terminalId);

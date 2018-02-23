@@ -7,6 +7,7 @@ import com.lxx.mydemo.nettydemo.service.common.util.BitOperator;
 import com.lxx.mydemo.nettydemo.service.common.util.ByteUtil;
 import com.lxx.mydemo.nettydemo.service.common.util.json.JsonUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import javax.annotation.Resource;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @author lixiaoxiong
  * @version 2018-02-12
  */
-@Service("p808Decoder")
+@Sharable
 public class P808Decoder extends ChannelInboundHandlerAdapter {
     private final static Logger logger = LoggerFactory.getLogger(P808Decoder.class);
     @Resource

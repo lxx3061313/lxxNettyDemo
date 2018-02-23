@@ -32,4 +32,5 @@ public final class P808MsgType {
     public static final P808MsgType TERMINAL_REG = new P808MsgType(0x0100, "终端注册消息");
     public static final P808MsgType TERMINAL_COMMON_RESP = new P808MsgType(0x0001, "终端通用应答消息");
     public static final P808MsgType PLATFORM_COMMON_RESP = new P808MsgType(0x8001, "平台通用应答消息");
+    public static final P808MsgType TERMIMAL_REQ_RESP = new P808MsgType(0x8100, "终端注册应答消息");
 }

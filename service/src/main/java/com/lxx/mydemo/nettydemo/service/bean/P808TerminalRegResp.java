@@ -1,5 +1,6 @@
 package com.lxx.mydemo.nettydemo.service.bean;
 
+import com.lxx.mydemo.nettydemo.service.bean.P808Msg.P808MsgHeader;
 import com.lxx.mydemo.nettydemo.service.common.util.BitOperator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -11,87 +12,58 @@ import org.apache.commons.io.Charsets;
  * @version 2018-02-13
  */
 public class P808TerminalRegResp {
-    private final static BitOperator bitOperator = new BitOperator();
-    /**
-     * 应答流水号(2字节)
-     */
-    private int respFlowId;
 
-    /**
-     * 结果:0 成功,1车辆已注册 2数据库无该车辆 3 终端已被注册 4 数据库无该终端
-     */
-    private byte respResult;
 
-    /**
-     * 鉴权码
-     */
-    private String authCode;
-
-    public int getRespFlowId() {
-        return respFlowId;
+    public static TerRegRespBuilder createRespBuilder() {
+        return new TerRegRespBuilder();
     }
 
-    public void setRespFlowId(int respFlowId) {
-        this.respFlowId = respFlowId;
-    }
-
-    public byte getRespResult() {
-        return respResult;
-    }
-
-    public void setRespResult(byte respResult) {
-        this.respResult = respResult;
-    }
-
-    public String getAuthCode() {
-        return authCode;
-    }
-
-    public void setAuthCode(String authCode) {
-        this.authCode = authCode;
-    }
-
-
-    static class Builder {
-        /**
-         * 应答流水号(2字节)
-         */
-        private int respFlowId;
-
-        /**
-         * 结果:0 成功,1车辆已注册 2数据库无该车辆 3 终端已被注册 4 数据库无该终端
-         */
-        private byte respResult;
-
-        /**
-         * 鉴权码
-         */
-        private String authCode;
-
-        public Builder setFlowId(int flowId) {
-            this.respFlowId = flowId;
+    public static class TerRegRespBuilder {
+        private int msgId;
+        private int msgBodyPropsField;
+        private String terminalId;
+        private int flowId;
+        private byte[] msgBodyBytes;
+        public TerRegRespBuilder setMsgId(int msgId) {
+            this.msgId = msgId;
             return this;
         }
 
-        public Builder setResult(byte result) {
-            this.respResult = result;
+        public TerRegRespBuilder setBodyField(int bodyField) {
+            this.msgBodyPropsField = bodyField;
             return this;
         }
 
-        public Builder setAuthCode(String code) {
-            this.authCode = code;
+        public TerRegRespBuilder setTerminalId(String terminalId) {
+            this.terminalId = terminalId;
             return this;
         }
 
-        public byte[] build() {
-            ByteBuf buf = Unpooled.buffer();
-            buf.writeBytes(bitOperator.integerTo2Bytes(this.respFlowId));
-            buf.writeByte(this.respResult);
-            buf.writeBytes(authCode.getBytes(Charsets.toCharset("GBK")));
+        public TerRegRespBuilder setFlowId(int flowId) {
+            this.flowId = flowId;
+            return this;
+        }
 
-            byte[] result = new byte[buf.readableBytes()];
-            buf.readBytes(result);
-            return result;
+        public TerRegRespBuilder setBody(byte [] body) {
+            this.msgBodyBytes = body;
+            return this;
+        }
+
+        public P808Msg build() {
+            if (msgBodyBytes == null || msgBodyBytes.length == 0) {
+                throw new IllegalArgumentException("msg body can not be empty");
+            }
+
+            P808MsgHeader header = new P808MsgHeader();
+            header.setMsgId(msgId);
+            header.setMsgBodyPropsField(msgBodyPropsField);
+            header.setTerminalPhone(terminalId);
+            header.setFlowId(flowId);
+
+            P808Msg msg = new P808Msg();
+            msg.setMsgHeader(header);
+            msg.setMsgBodyBytes(msgBodyBytes);
+            return msg;
         }
     }
 }
