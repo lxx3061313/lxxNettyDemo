@@ -7,6 +7,7 @@ import com.lxx.mydemo.nettydemo.service.common.util.BitOperator;
 import com.lxx.mydemo.nettydemo.service.common.util.ByteUtil;
 import com.lxx.mydemo.nettydemo.service.common.util.json.JsonUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -25,10 +26,7 @@ public class P808Decoder extends ChannelInboundHandlerAdapter {
     @Resource
     P808HeaderDecoder p808HeaderDecoder;
 
-    private BitOperator bitOperator;
-
     public P808Decoder() {
-        this.bitOperator = new BitOperator();
     }
 
     @Override
@@ -42,7 +40,7 @@ public class P808Decoder extends ChannelInboundHandlerAdapter {
         buf.readBytes(bytes);
 
         // todo 加debugflag
-        logger.info("receive bytes:{}", ByteUtil.bytes2HexString(bytes));
+        logger.info("channel :{} receive bytes:{}", ctx.channel().id().asLongText(), ByteUtil.bytes2HexString(bytes));
 
         P808Msg p808Msg = parseMsg(bytes);
         // todo 加debugflag
@@ -66,7 +64,7 @@ public class P808Decoder extends ChannelInboundHandlerAdapter {
         msg.setMsgBodyBytes(body);
 
         int checkSumInPkg = msgBytes[msgBytes.length - 1];
-        int checkSum = bitOperator.getCheckSum4JT808(msgBytes, 0, msgBytes.length - 1);
+        int checkSum = BitOperator.getCheckSum4JT808(msgBytes, 0, msgBytes.length - 1);
         if (checkSum != checkSumInPkg) {
             logger.error("校验码验证失败");
         }

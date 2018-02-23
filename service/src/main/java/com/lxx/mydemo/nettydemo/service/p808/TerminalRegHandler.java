@@ -7,6 +7,9 @@ import com.lxx.mydemo.nettydemo.service.p808.msgbuilder.P808TerReqMsgBuilder;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import java.nio.channels.SocketChannel;
+import javax.annotation.Resource;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -18,6 +21,12 @@ import org.slf4j.Logger;
 @Sharable
 public class TerminalRegHandler extends ChannelInboundHandlerAdapter {
     private final static Logger logger  = LoggerFactory.getLogger(TerminalRegHandler.class);
+
+    @Resource
+    P808ConnFlowIdManager p808ConnFlowIdManager;
+
+    @Resource
+    P808SessionManager p808SessionManager;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -40,8 +49,11 @@ public class TerminalRegHandler extends ChannelInboundHandlerAdapter {
             // header
             respBuilder.setMsgId(P808MsgType.TERMIMAL_REQ_RESP.getCode())
                     .setTermimalId(msgHeader.getTerminalPhone())
-                    .setFlowId(msgHeader.getFlowId() + 1);
+                    .setFlowId(p808ConnFlowIdManager.getFlowId(ctx.channel().id().asLongText()));
             P808Msg build = respBuilder.build();
+
+            // 保存channel
+            p808SessionManager.keepChannel(msgHeader.getTerminalPhone(), (NioSocketChannel) ctx.channel());
             ctx.writeAndFlush(build);
         } else {
             ctx.fireChannelRead(msg);

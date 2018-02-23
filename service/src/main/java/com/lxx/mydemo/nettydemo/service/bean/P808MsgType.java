@@ -34,4 +34,5 @@ public final class P808MsgType {
     public static final P808MsgType PLATFORM_COMMON_RESP = new P808MsgType(0x8001, "平台通用应答消息");
     public static final P808MsgType TERMIMAL_REQ_RESP = new P808MsgType(0x8100, "终端注册应答消息");
     public static final P808MsgType TERMIMAL_AUTH = new P808MsgType(0x0102, "终端鉴权消息");
+    public static final P808MsgType TERMIMAL_HEART_BEAT = new P808MsgType(0x0002, "终端心跳消息");
 }

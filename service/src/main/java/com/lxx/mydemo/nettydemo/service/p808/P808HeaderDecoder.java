@@ -16,19 +16,16 @@ import org.springframework.stereotype.Service;
 public class P808HeaderDecoder {
 
     @Resource
-    BitOperator bitOperator;
-
-    @Resource
     BCD8421Operater bcd8421Operater;
 
     public P808MsgHeader parseHeader(byte[] headerBytes) {
         P808MsgHeader header = new P808MsgHeader();
 
         //1. 消息id
-        header.setMsgId(bitOperator.parseIntFromBytes(headerBytes, 0, 2));
+        header.setMsgId(BitOperator.parseIntFromBytes(headerBytes, 0, 2));
 
         //2. 消息体属性
-        int msgBodyProps = bitOperator.parseIntFromBytes(headerBytes, 2, 2);
+        int msgBodyProps = BitOperator.parseIntFromBytes(headerBytes, 2, 2);
         //2.1 消息体属性字段
         header.setMsgBodyPropsField(msgBodyProps);
 
@@ -48,12 +45,12 @@ public class P808HeaderDecoder {
         header.setTerminalPhone(bcd8421Operater.parseBcdHexString(headerBytes, 4, 6));
 
         //4. 消息流水号
-        header.setFlowId(bitOperator.parseIntFromBytes(headerBytes, 10 ,2));
+        header.setFlowId(BitOperator.parseIntFromBytes(headerBytes, 10 ,2));
 
         if (header.isHasSubPackage()) {
-            header.setPackageInfoField(bitOperator.parseIntFromBytes(headerBytes, 12, 4));
-            header.setTotalSubPackage(bitOperator.parseIntFromBytes(headerBytes, 12, 2));
-            header.setSubPackageSeq(bitOperator.parseIntFromBytes(headerBytes, 14, 2));
+            header.setPackageInfoField(BitOperator.parseIntFromBytes(headerBytes, 12, 4));
+            header.setTotalSubPackage(BitOperator.parseIntFromBytes(headerBytes, 12, 2));
+            header.setSubPackageSeq(BitOperator.parseIntFromBytes(headerBytes, 14, 2));
         }
         return header;
     }

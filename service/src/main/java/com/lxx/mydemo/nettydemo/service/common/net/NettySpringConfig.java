@@ -4,6 +4,7 @@ import com.lxx.mydemo.nettydemo.service.bean.MsgConstants;
 import com.lxx.mydemo.nettydemo.service.p808.P808Decoder;
 import com.lxx.mydemo.nettydemo.service.p808.P808Encoder;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalAuthHandler;
+import com.lxx.mydemo.nettydemo.service.p808.TerminalHeartHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalRegHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -65,6 +66,9 @@ public class NettySpringConfig {
 
                         // 终端鉴权处理器
                         ch.pipeline().addLast(terminalAuthHandler());
+
+                        // 心跳
+                        ch.pipeline().addLast(terminalHeartHandler());
                     }
                 }).option(ChannelOption.SO_BACKLOG, 1024);
         return bootstrap;
@@ -88,6 +92,11 @@ public class NettySpringConfig {
     @Bean(name = "terminalRegHandler")
     public TerminalRegHandler terminalRegHandler() {
         return new TerminalRegHandler();
+    }
+
+    @Bean(name = "terminalHeartHandler")
+    public TerminalHeartHandler terminalHeartHandler() {
+        return new TerminalHeartHandler();
     }
 
     @Bean(name = "terminalAuthHandler")

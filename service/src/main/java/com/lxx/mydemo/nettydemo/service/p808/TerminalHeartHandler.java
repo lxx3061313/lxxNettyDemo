@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
  * @version 2018-02-23
  */
 @Sharable
-public class TerminalAuthHandler extends ChannelInboundHandlerAdapter {
-    private final static Logger logger  = LoggerFactory.getLogger(TerminalAuthHandler.class);
+public class TerminalHeartHandler extends ChannelInboundHandlerAdapter {
+    private final static Logger logger  = LoggerFactory.getLogger(TerminalHeartHandler.class);
 
     @Resource
     P808ConnFlowIdManager p808ConnFlowIdManager;
@@ -26,23 +26,15 @@ public class TerminalAuthHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         P808Msg m = (P808Msg) msg;
         P808MsgHeader msgHeader = m.getMsgHeader();
-        if (msgHeader.getMsgId() == P808MsgType.TERMIMAL_AUTH.getCode()) {
-            logger.info("鉴权消息");
+        if (msgHeader.getMsgId() == P808MsgType.TERMIMAL_HEART_BEAT.getCode()) {
+            logger.info("收到心跳消息");
 
             PlatCommRespMsgBuilder builder = PlatCommRespMsgBuilder.createBuilder();
-            //body
             builder.setRespFlowId(p808ConnFlowIdManager.getFlowId(ctx.channel().id().asLongText()));
-            builder.setRespMsgId(P808MsgType.TERMIMAL_AUTH.getCode());
-
-            //todo 默认返回成功
+            builder.setRespMsgId(P808MsgType.TERMIMAL_HEART_BEAT.getCode());
             builder.setResult((byte)0);
-        } else {
+        } else{
             ctx.fireChannelRead(msg);
         }
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
     }
 }
