@@ -1,5 +1,6 @@
 package com.lxx.mydemo.nettydemo.service.common.util;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -108,6 +109,12 @@ public class BitOperator {
         byte[] tmp = new byte[len];
         System.arraycopy(data, startIndex, tmp, 0, len);
         return byteToInteger(tmp);
+    }
+
+    public static String parseStringFromBytes(byte[] data, int startIndex, int length, Charset charset) {
+        byte[] tmp = new byte[length];
+        System.arraycopy(data, startIndex, tmp, 0, length);
+        return new String(tmp, charset);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.lxx.mydemo.nettydemo.service.p808.msgbuilder;
 
+import com.lxx.mydemo.nettydemo.service.bean.P808MsgType;
 import com.lxx.mydemo.nettydemo.service.common.util.BitOperator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -37,6 +38,11 @@ public class PlatCommRespMsgBuilder extends P808MsgBuilder{
         byte[] result = new byte[buf.readableBytes()];
         buf.readBytes(result);
         return result;
+    }
+
+    @Override
+    int getMsgId() {
+        return P808MsgType.PLATFORM_COMMON_RESP.getCode();
     }
 
     public PlatCommRespMsgBuilder setRespMsgId(int msgId) {

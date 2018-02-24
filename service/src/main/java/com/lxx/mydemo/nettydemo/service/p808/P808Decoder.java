@@ -43,6 +43,10 @@ public class P808Decoder extends ChannelInboundHandlerAdapter {
         logger.info("channel :{} receive bytes:{}", ctx.channel().id().asLongText(), ByteUtil.bytes2HexString(bytes));
 
         P808Msg p808Msg = parseMsg(bytes);
+        if (p808Msg == null) {
+            return;
+        }
+
         // todo 加debugflag
         logger.info("parse msg:{}", JsonUtil.of(p808Msg));
         ctx.fireChannelRead(p808Msg);
@@ -67,6 +71,7 @@ public class P808Decoder extends ChannelInboundHandlerAdapter {
         int checkSum = BitOperator.getCheckSum4JT808(msgBytes, 0, msgBytes.length - 1);
         if (checkSum != checkSumInPkg) {
             logger.error("校验码验证失败");
+            return null;
         }
         msg.setCheckSum(checkSumInPkg);
         return msg;

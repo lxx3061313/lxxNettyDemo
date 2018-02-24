@@ -3,8 +3,10 @@ package com.lxx.mydemo.nettydemo.service.common.net;
 import com.lxx.mydemo.nettydemo.service.bean.MsgConstants;
 import com.lxx.mydemo.nettydemo.service.p808.P808Decoder;
 import com.lxx.mydemo.nettydemo.service.p808.P808Encoder;
+import com.lxx.mydemo.nettydemo.service.p808.RegularReportHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalAuthHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalHeartHandler;
+import com.lxx.mydemo.nettydemo.service.p808.TerminalParamRespHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalRegHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -69,6 +71,11 @@ public class NettySpringConfig {
 
                         // 心跳
                         ch.pipeline().addLast(terminalHeartHandler());
+
+                        // 定时汇报消息
+                        ch.pipeline().addLast(regularReportHandler());
+
+                        ch.pipeline().addLast(terminalParamRespHandler());
                     }
                 }).option(ChannelOption.SO_BACKLOG, 1024);
         return bootstrap;
@@ -102,6 +109,16 @@ public class NettySpringConfig {
     @Bean(name = "terminalAuthHandler")
     public TerminalAuthHandler terminalAuthHandler() {
         return new TerminalAuthHandler();
+    }
+
+    @Bean(name = "regularReportHandler")
+    public RegularReportHandler regularReportHandler() {
+        return  new RegularReportHandler();
+    }
+
+    @Bean(name = "terminalParamRespHandler")
+    public TerminalParamRespHandler terminalParamRespHandler() {
+        return new TerminalParamRespHandler();
     }
 
     @Bean(name = "p808Encoder")

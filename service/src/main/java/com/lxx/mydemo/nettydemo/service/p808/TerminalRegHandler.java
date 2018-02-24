@@ -47,8 +47,7 @@ public class TerminalRegHandler extends ChannelInboundHandlerAdapter {
                     .setRespResult((byte)0)
                     .setAuthCode("123456");
             // header
-            respBuilder.setMsgId(P808MsgType.TERMIMAL_REQ_RESP.getCode())
-                    .setTermimalId(msgHeader.getTerminalPhone())
+            respBuilder.setTermimalId(msgHeader.getTerminalPhone())
                     .setFlowId(p808ConnFlowIdManager.getFlowId(ctx.channel().id().asLongText()));
             P808Msg build = respBuilder.build();
 

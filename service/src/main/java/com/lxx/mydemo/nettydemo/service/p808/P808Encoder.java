@@ -110,7 +110,7 @@ public class P808Encoder extends MessageToByteEncoder<P808Msg> {
         //7. 校验码
         byte [] forCheckSum = new byte[buf.readableBytes()];
         buf.readBytes(forCheckSum);
-        buf.writeByte(BitOperator.getCheckSum4JT808(forCheckSum, 1, forCheckSum.length - 1));
+        buf.writeByte(BitOperator.getCheckSum4JT808(forCheckSum, 1, forCheckSum.length));
 
         //8. 标识位
         buf.writeByte(MsgConstants.MSG_IDENTIFICATION_BIT);

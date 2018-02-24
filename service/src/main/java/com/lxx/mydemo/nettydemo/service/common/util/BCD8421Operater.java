@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.sun.media.sound.SoftTuning;
+import com.sun.org.apache.regexp.internal.RE;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.util.Iterator;
@@ -140,6 +141,17 @@ public class BCD8421Operater {
             ++i;
         }
         return result;
+    }
+
+    /**
+     * 特殊情况 0001 1000 -》18, 0000 0010-》02
+     * @param b
+     * @return
+     */
+    public static int decIntFromBcd1(byte b) {
+        int decade = (b & 0xF0) >> 4;
+        int unit = b & 0x0F;
+        return decade * 10 + unit;
     }
 
     public static void main(String[] args) {

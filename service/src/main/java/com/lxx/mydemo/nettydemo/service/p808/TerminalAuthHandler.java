@@ -30,12 +30,18 @@ public class TerminalAuthHandler extends ChannelInboundHandlerAdapter {
             logger.info("鉴权消息");
 
             PlatCommRespMsgBuilder builder = PlatCommRespMsgBuilder.createBuilder();
-            //body
-            builder.setRespFlowId(p808ConnFlowIdManager.getFlowId(ctx.channel().id().asLongText()));
-            builder.setRespMsgId(P808MsgType.TERMIMAL_AUTH.getCode());
 
-            //todo 默认返回成功
+            int flowId = p808ConnFlowIdManager.getFlowId(ctx.channel().id().asLongText());
+            //body
+            builder.setRespFlowId(msgHeader.getFlowId());
+            builder.setRespMsgId(P808MsgType.TERMIMAL_AUTH.getCode());
             builder.setResult((byte)0);
+
+            //header
+            builder.setTermimalId(msgHeader.getTerminalPhone())
+                    .setFlowId(flowId);
+            P808Msg build = builder.build();
+            ctx.writeAndFlush(build);
         } else {
             ctx.fireChannelRead(msg);
         }

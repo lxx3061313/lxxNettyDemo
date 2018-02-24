@@ -10,14 +10,8 @@ import com.lxx.mydemo.nettydemo.service.p808.P808HeaderBodyPropsBuilder.PropsBui
  * @version 2018-02-23
  */
 public abstract class P808MsgBuilder {
-    private int msgId;
     private String terminalId;
     private int flowId;
-
-    public P808MsgBuilder setMsgId(int msgId) {
-        this.msgId = msgId;
-        return this;
-    }
 
     public P808MsgBuilder setTermimalId(String terminalId) {
         this.terminalId = terminalId;
@@ -31,14 +25,12 @@ public abstract class P808MsgBuilder {
 
     abstract byte [] buildBody();
 
+    abstract int getMsgId();
+
     public P808Msg build() {
         byte [] msgBodyBytes = buildBody();
-        if (msgBodyBytes == null || msgBodyBytes.length == 0) {
-            throw new IllegalArgumentException("msg body can not be empty");
-        }
-
         P808MsgHeader header = new P808MsgHeader();
-        header.setMsgId(msgId);
+        header.setMsgId(getMsgId());
         header.setMsgBodyPropsField(buildBodyField(msgBodyBytes.length));
         header.setTerminalPhone(terminalId);
         header.setFlowId(flowId);
@@ -48,6 +40,11 @@ public abstract class P808MsgBuilder {
         return msg;
     }
 
+    /**
+     * 构建消息体属性字段
+     * @param bodyLength 可能为0
+     * @return 返回构建完成的字段
+     */
     private int buildBodyField(int bodyLength) {
         PropsBuilder builder = P808HeaderBodyPropsBuilder.createBuilder();
         builder.setSubPackFlag(false);
