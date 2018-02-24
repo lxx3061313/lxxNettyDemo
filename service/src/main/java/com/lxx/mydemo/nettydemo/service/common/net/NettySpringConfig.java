@@ -5,6 +5,7 @@ import com.lxx.mydemo.nettydemo.service.p808.P808Decoder;
 import com.lxx.mydemo.nettydemo.service.p808.P808Encoder;
 import com.lxx.mydemo.nettydemo.service.p808.RegularReportHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalAuthHandler;
+import com.lxx.mydemo.nettydemo.service.p808.TerminalBizMsgHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalHeartHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalParamRespHandler;
 import com.lxx.mydemo.nettydemo.service.p808.TerminalRegHandler;
@@ -63,19 +64,11 @@ public class NettySpringConfig {
                         // 808协议编码器
                         ch.pipeline().addLast(p808Encoder());
 
-                        // 终端注册处理器
-                        ch.pipeline().addLast(terminalRegHandler());
-
-                        // 终端鉴权处理器
-                        ch.pipeline().addLast(terminalAuthHandler());
-
                         // 心跳
                         ch.pipeline().addLast(terminalHeartHandler());
 
-                        // 定时汇报消息
-                        ch.pipeline().addLast(regularReportHandler());
-
-                        ch.pipeline().addLast(terminalParamRespHandler());
+                        // 业务消息处理
+                        ch.pipeline().addLast(terminalBizMsgHandler());
                     }
                 }).option(ChannelOption.SO_BACKLOG, 1024);
         return bootstrap;
@@ -96,29 +89,33 @@ public class NettySpringConfig {
         return new P808Decoder();
     }
 
-    @Bean(name = "terminalRegHandler")
-    public TerminalRegHandler terminalRegHandler() {
-        return new TerminalRegHandler();
-    }
+//    @Bean(name = "terminalRegHandler")
+//    public TerminalRegHandler terminalRegHandler() {
+//        return new TerminalRegHandler();
+//    }
 
     @Bean(name = "terminalHeartHandler")
     public TerminalHeartHandler terminalHeartHandler() {
         return new TerminalHeartHandler();
     }
 
-    @Bean(name = "terminalAuthHandler")
-    public TerminalAuthHandler terminalAuthHandler() {
-        return new TerminalAuthHandler();
-    }
+//    @Bean(name = "terminalAuthHandler")
+//    public TerminalAuthHandler terminalAuthHandler() {
+//        return new TerminalAuthHandler();
+//    }
 
-    @Bean(name = "regularReportHandler")
-    public RegularReportHandler regularReportHandler() {
-        return  new RegularReportHandler();
-    }
+//    @Bean(name = "regularReportHandler")
+//    public RegularReportHandler regularReportHandler() {
+//        return  new RegularReportHandler();
+//    }
 
-    @Bean(name = "terminalParamRespHandler")
-    public TerminalParamRespHandler terminalParamRespHandler() {
-        return new TerminalParamRespHandler();
+//    @Bean(name = "terminalParamRespHandler")
+//    public TerminalParamRespHandler terminalParamRespHandler() {
+//        return new TerminalParamRespHandler();
+//    }
+    @Bean(name = "terminalBizMsgHandler")
+    public TerminalBizMsgHandler terminalBizMsgHandler() {
+        return new TerminalBizMsgHandler();
     }
 
     @Bean(name = "p808Encoder")
