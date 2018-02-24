@@ -111,6 +111,16 @@ public class BitOperator {
         return byteToInteger(tmp);
     }
 
+    public static byte[] subBytes(byte[] data, int startIndex, int length) {
+        if (startIndex + length >= data.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
+        byte[] tmp = new byte[length];
+        System.arraycopy(data, startIndex, tmp, 0, length);
+        return tmp;
+    }
+
     public static String parseStringFromBytes(byte[] data, int startIndex, int length, Charset charset) {
         byte[] tmp = new byte[length];
         System.arraycopy(data, startIndex, tmp, 0, length);

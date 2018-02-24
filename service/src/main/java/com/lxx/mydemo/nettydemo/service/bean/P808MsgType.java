@@ -37,5 +37,10 @@ public final class P808MsgType {
     public static final P808MsgType TERMIMAL_HEART_BEAT = new P808MsgType(0x0002, "终端心跳消息");
     public static final P808MsgType TERMIMAL_REGULAR_REPORT = new P808MsgType(0x0200, "终端定时汇报消息");
     public static final P808MsgType QUERY_TERMINAL_PARAM = new P808MsgType(0x8104, "查询终端参数");
+    public static final P808MsgType QUERY_TERMINAL_EXACT_PARAM = new P808MsgType(0x8106, "查询终端指定参数");
     public static final P808MsgType QUERY_TERMINAL_PARAM_RESP = new P808MsgType(0x0104, "查询终端参数应答");
+    public static final P808MsgType QUERY_TERMINAL_ATTR = new P808MsgType(0x8107, "查询终端属性");
+    public static final P808MsgType QUERY_TERMINAL_ATTR_RESP = new P808MsgType(0x0107, "查询终端属性应答");
+    public static final P808MsgType DEVICE_JOIN_TERMINAL_NET = new P808MsgType(0x0F01, "智能锁入网报告");
+    public static final P808MsgType DEVICE_LEAVE_TERMINAL_NET = new P808MsgType(0x0F02, "智能锁脱网报告");
 }

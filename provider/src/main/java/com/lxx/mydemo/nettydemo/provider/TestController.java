@@ -22,4 +22,16 @@ public class TestController {
     public void test(String id) {
         terminalQueryService.queryTerminalParam(id);
     }
+
+    @RequestMapping("/exactParam")
+    @JsonBody
+    public void queryExactParam(String tid, String ids) {
+        terminalQueryService.queryExactTerminalParam(tid, ids);
+    }
+
+    @RequestMapping("/attr")
+    @JsonBody
+    public void queryTerminalAttr(String id) {
+        terminalQueryService.queryTerminalAttri(id);
+    }
 }

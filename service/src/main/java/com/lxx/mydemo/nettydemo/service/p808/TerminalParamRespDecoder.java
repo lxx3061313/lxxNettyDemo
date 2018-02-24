@@ -1,4 +1,4 @@
-package com.lxx.mydemo.nettydemo.service.p808.msgbuilder;
+package com.lxx.mydemo.nettydemo.service.p808;
 
 import com.lxx.mydemo.nettydemo.service.bean.TerminalParamItem;
 import com.lxx.mydemo.nettydemo.service.bean.TerminalParamResp;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @version 2018-02-24
  */
 @Service
-public class TerminalParamRespBuilder {
+public class TerminalParamRespDecoder {
 
     public TerminalParamResp decode(byte[] body) {
         TerminalParamResp resp = new TerminalParamResp();

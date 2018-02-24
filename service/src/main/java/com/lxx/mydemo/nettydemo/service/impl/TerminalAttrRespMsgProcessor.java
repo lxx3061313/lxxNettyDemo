@@ -2,13 +2,13 @@ package com.lxx.mydemo.nettydemo.service.impl;
 
 import com.lxx.mydemo.nettydemo.service.bean.P808Msg.P808MsgHeader;
 import com.lxx.mydemo.nettydemo.service.bean.P808MsgType;
-import com.lxx.mydemo.nettydemo.service.bean.TerminalParamResp;
+import com.lxx.mydemo.nettydemo.service.bean.TerminalAttrResp;
 import com.lxx.mydemo.nettydemo.service.common.util.json.JsonUtil;
-import com.lxx.mydemo.nettydemo.service.p808.TerminalParamRespDecoder;
+import com.lxx.mydemo.nettydemo.service.p808.TerminalAttrMsgDecoder;
 import io.netty.channel.ChannelHandlerContext;
 import javax.annotation.Resource;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,23 +16,22 @@ import org.springframework.stereotype.Service;
  * @version 2018-02-24
  */
 @Service
-public class TerminalParamRespProcessor extends AbstractMsgProcessor {
-    private final static Logger logger  = LoggerFactory.getLogger(TerminalParamRespProcessor.class);
-
+public class TerminalAttrRespMsgProcessor extends AbstractMsgProcessor {
+    private final static Logger logger = LoggerFactory.getLogger(TerminalAttrRespMsgProcessor.class);
 
     @Resource
-    TerminalParamRespDecoder terminalParamRespDecoder;
+    TerminalAttrMsgDecoder terminalAttrMsgDecoder;
 
     @Override
     void doProcess(P808MsgHeader header, byte[] body, ChannelHandlerContext ctx) {
-        logger.info("查询终端参数应答消息");
-        TerminalParamResp decode = terminalParamRespDecoder.decode(body);
-        logger.info("终端参数应答消息:{}", JsonUtil.of(decode));
+        logger.info("终端属性消息");
+        TerminalAttrResp decode = terminalAttrMsgDecoder.decode(body);
+        logger.info("终端属性消息详情:{}", JsonUtil.of(decode));
     }
 
     @Override
     int msgCode() {
-        return P808MsgType.QUERY_TERMINAL_PARAM_RESP.getCode();
+        return P808MsgType.QUERY_TERMINAL_ATTR_RESP.getCode();
     }
 
     @Override
